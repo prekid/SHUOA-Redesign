@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SHUOA Website Redesign Proposal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy: #1a2744;
+  --navy-light: #243258;
+  --gold: #c8a96e;
+  --gold-light: #e8cc9a;
+  --cream: #f9f6f0;
+  --white: #ffffff;
+  --gray: #6b7280;
+  --gray-light: #f3f4f6;
+  --red: #c0392b;
+  --green: #1a6b4a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--navy);
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem; height: 56px;
+}
+.nav-logo { font-family: 'DM Serif Display', serif; color: var(--gold); font-size: 1.1rem; }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+
+/* ── SLIDES ── */
+.slide {
+  min-height: 100vh;
+  padding: 7rem 0 4rem;
+  display: flex; flex-direction: column; justify-content: center;
+}
+
+.container { max-width: 1000px; margin: 0 auto; padding: 0 3rem; }
+
+/* ── SLIDE 1: COVER ── */
+#slide1 {
+  background: var(--navy);
+  position: relative; overflow: hidden;
+}
+#slide1::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(200,169,110,0.12) 0%, transparent 60%);
+}
+.cover-tag {
+  display: inline-block;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold); border: 1px solid rgba(200,169,110,0.4);
+  padding: 5px 14px; border-radius: 99px; margin-bottom: 2rem;
+}
+.cover-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--white); line-height: 1.15; margin-bottom: 1.5rem;
+}
+.cover-title span { color: var(--gold); }
+.cover-sub {
+  font-size: 1.1rem; color: rgba(255,255,255,0.6);
+  max-width: 480px; margin-bottom: 3rem; font-weight: 300;
+}
+.cover-meta {
+  display: flex; gap: 2.5rem;
+}
+.cover-meta-item { }
+.cover-meta-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); margin-bottom: 3px; }
+.cover-meta-value { font-size: 0.95rem; color: var(--white); font-weight: 500; }
+
+.cover-building {
+  position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+  width: 320px; opacity: 0.06;
+  font-family: 'DM Serif Display', serif;
+  font-size: 18rem; color: var(--white); line-height: 1;
+  user-select: none; pointer-events: none;
+}
+
+/* ── SLIDE 2: PROBLEMS ── */
+#slide2 { background: var(--cream); }
+
+.slide-label {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.75rem;
+}
+.slide-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  color: var(--navy); margin-bottom: 0.75rem; line-height: 1.2;
+}
+.slide-sub {
+  font-size: 1rem; color: var(--gray); max-width: 560px; margin-bottom: 3rem; font-weight: 300;
+}
+
+.problems-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+}
+
+.problem-card {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 12px; padding: 1.5rem;
+  position: relative; overflow: hidden;
+}
+.problem-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--red);
+}
+.problem-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: #fff0ee; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem; font-size: 1rem;
+}
+.problem-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy); }
+.problem-desc { font-size: 0.85rem; color: var(--gray); line-height: 1.6; }
+
+.problem-card.highlight::before { background: var(--gold); }
+.problem-card.highlight .problem-icon { background: #fdf4e7; }
+
+/* Before/after strip */
+.ba-strip {
+  margin-top: 2.5rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden;
+}
+.ba-side { background: var(--white); padding: 1.5rem 2rem; }
+.ba-label {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 1rem; padding: 3px 10px; border-radius: 99px; display: inline-block;
+}
+.ba-label.before { background: #fff0ee; color: var(--red); }
+.ba-label.after  { background: #edf7f2; color: var(--green); }
+.ba-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ba-list li { font-size: 0.875rem; color: var(--gray); display: flex; align-items: flex-start; gap: 8px; }
+.ba-list li::before { content: ''; flex-shrink: 0; margin-top: 6px; }
+.ba-list.bad li::before { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+.ba-list.good li::before { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+/* ── SLIDE 3: SOLUTION ── */
+#slide3 { background: var(--navy); }
+
+#slide3 .slide-title { color: var(--white); }
+#slide3 .slide-sub { color: rgba(255,255,255,0.5); }
+
+.features-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
+}
+
+.feature-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 1.5rem;
+  transition: background .2s;
+}
+.feature-card:hover { background: rgba(255,255,255,0.08); }
+
+.feature-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem; color: rgba(200,169,110,0.25);
+  margin-bottom: 0.75rem; line-height: 1;
+}
+.feature-title { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+.feature-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+.cta-box {
+  margin-top: 2.5rem;
+  background: var(--gold);
+  border-radius: 12px; padding: 2rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+}
+.cta-text { }
+.cta-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--navy); margin-bottom: 0.25rem; }
+.cta-sub { font-size: 0.875rem; color: rgba(26,39,68,0.7); }
+.cta-details { display: flex; gap: 2rem; flex-shrink: 0; }
+.cta-item { text-align: center; }
+.cta-item-value { font-size: 1.4rem; font-weight: 700; color: var(--navy); }
+.cta-item-label { font-size: 0.75rem; color: rgba(26,39,68,0.6); margin-top: 2px; }
+
+/* ── PAGE INDICATORS ── */
+.page-num {
+  position: fixed; right: 2rem; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 8px; z-index: 50;
+}
+.page-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(0,0,0,0.2); transition: all .3s; cursor: pointer;
+}
+.page-dot.dark { background: rgba(255,255,255,0.25); }
+.page-dot.active { background: var(--gold); transform: scale(1.4); }
+
+/* ── ANIMATIONS ── */
+.fade-up {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.fade-up:nth-child(2) { transition-delay: 0.1s; }
+.fade-up:nth-child(3) { transition-delay: 0.2s; }
+.fade-up:nth-child(4) { transition-delay: 0.3s; }
+.fade-up:nth-child(5) { transition-delay: 0.4s; }
+.fade-up:nth-child(6) { transition-delay: 0.5s; }
+
+@media (max-width: 768px) {
+  nav { padding: 0 1.5rem; }
+  .container { padding: 0 1.5rem; }
+  .problems-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .ba-strip { grid-template-columns: 1fr; }
+  .cta-box { flex-direction: column; }
+  .cover-building { display: none; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">SHUOA Redesign</span>
+  <div class="nav-links">
+    <a href="#slide1">Overview</a>
+    <a href="#slide2">The Problem</a>
+    <a href="#slide3">The Solution</a>
+  </div>
+</nav>
+
+<div class="page-num">
+  <div class="page-dot dark active" onclick="document.getElementById('slide1').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="page-dot" onclick="document.getElementById('slide2').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="page-dot dark" onclick="document.getElementById('slide3').scrollIntoView({behavior:'smooth'})"></div>
+</div>
+
+<!-- SLIDE 1: COVER -->
+<section class="slide" id="slide1">
+  <div class="cover-building">S</div>
+  <div class="container">
+    <div class="cover-tag fade-up">Website Redesign Proposal</div>
+    <h1 class="cover-title fade-up">A website that<br><span>works as hard</span><br>as your community.</h1>
+    <p class="cover-sub fade-up">A friendly proposal for modernizing the Skyline House Unit Owners Association website — making it easier to use, easier to maintain, and something residents are actually proud of.</p>
+    <div class="cover-meta fade-up">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Prepared for</div>
+        <div class="cover-meta-value">SHUOA Management</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Property</div>
+        <div class="cover-meta-value">Skyline House, Falls Church VA</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Date</div>
+        <div class="cover-meta-value">April 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2: PROBLEMS -->
+<section class="slide" id="slide2">
+  <div class="container">
+    <p class="slide-label fade-up">Where things stand today</p>
+    <h2 class="slide-title fade-up">The current site has a few things working against it.</h2>
+    <p class="slide-sub fade-up">That's not a criticism — it's just that the web has moved on, and the site hasn't kept up. Here's what residents and visitors are running into:</p>
+
+    <div class="problems-grid">
+      <div class="problem-card fade-up">
+        <div class="problem-icon">📱</div>
+        <div class="problem-title">Doesn't work on phones</div>
+        <div class="problem-desc">The site was built for desktop screens. On a phone, text is tiny, buttons are hard to tap, and navigation breaks. Most people browse on mobile today.</div>
+      </div>
+      <div class="problem-card fade-up">
+        <div class="problem-icon">📅</div>
+        <div class="problem-title">Outdated content everywhere</div>
+        <div class="problem-desc">Event dates from months ago, committee agendas marked "not yet posted," and links that go nowhere. Stale content erodes trust quickly.</div>
+      </div>
+      <div class="problem-card fade-up">
+        <div class="problem-icon">🗺️</div>
+        <div class="problem-title">Hard to find things</div>
+        <div class="problem-desc">The navigation has 5 top-level sections with deep submenus. Finding something simple — like a contact number or a form — takes too many clicks.</div>
+      </div>
+      <div class="problem-card highlight fade-up">
+        <div class="problem-icon">🔗</div>
+        <div class="problem-title">Broken & confusing links</div>
+        <div class="problem-desc">Several links point to a separate domain (skylinehouseowners.com) without explanation. Others lead to PDFs that could live as proper web pages.</div>
+      </div>
+      <div class="problem-card highlight fade-up">
+        <div class="problem-icon">🎨</div>
+        <div class="problem-title">Visual design is dated</div>
+        <div class="problem-desc">Table-based layout, no consistent visual style, and a web hit counter at the bottom. It doesn't reflect the quality of the community it represents.</div>
+      </div>
+      <div class="problem-card highlight fade-up">
+        <div class="problem-icon">🔒</div>
+        <div class="problem-title">No clear residents' section</div>
+        <div class="problem-desc">There's no obvious, easy-to-find hub for residents — forms, announcements, emergency contacts. Everything is scattered across dozens of pages.</div>
+      </div>
+    </div>
+
+    <div class="ba-strip fade-up">
+      <div class="ba-side">
+        <span class="ba-label before">Today</span>
+        <ul class="ba-list bad">
+          <li>Navigation with 30+ links buried in submenus</li>
+          <li>No mobile-friendly layout</li>
+          <li>Content updated irregularly, dates often wrong</li>
+          <li>Important info (emergency contacts, forms) hard to find</li>
+          <li>Two separate domains causing confusion</li>
+        </ul>
+      </div>
+      <div class="ba-side">
+        <span class="ba-label after">After redesign</span>
+        <ul class="ba-list good">
+          <li>Clear, simple navigation — find anything in 2 clicks</li>
+          <li>Fully responsive, works great on every device</li>
+          <li>Easy content management — anyone can update it</li>
+          <li>Resident hub with forms, contacts, and announcements front and center</li>
+          <li>One unified domain, consistent experience throughout</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: SOLUTION -->
+<section class="slide" id="slide3">
+  <div class="container">
+    <p class="slide-label fade-up">What I'm proposing</p>
+    <h2 class="slide-title fade-up">A clean, modern site that residents actually want to use.</h2>
+    <p class="slide-sub fade-up">Nothing overcomplicated. Just a well-built website that's easy to navigate, easy to keep up-to-date, and genuinely useful for the people who live at Skyline House.</p>
+
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-num">01</div>
+        <div class="feature-title">Mobile-first redesign</div>
+        <div class="feature-desc">Built to look great on phones, tablets, and desktops from the ground up. No pinching, no zooming, no frustration — just a site that works wherever residents are.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-num">02</div>
+        <div class="feature-title">Simplified navigation</div>
+        <div class="feature-desc">A clear structure with the most-used sections front and center: Announcements, Resident Resources, Board & Committees, and Contact. Everything else neatly organized underneath.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-num">03</div>
+        <div class="feature-title">Resident hub</div>
+        <div class="feature-desc">One dedicated section for residents with forms, emergency contacts, event calendar, and announcements — all in one place, easy to update by management.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-num">04</div>
+        <div class="feature-title">Easy content management</div>
+        <div class="feature-desc">Built so non-technical staff can update announcements, post agendas, and change event dates without touching any code. No more outdated content.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-num">05</div>
+        <div class="feature-title">Visual refresh</div>
+        <div class="feature-desc">A professional, clean look that reflects the quality of Skyline House — consistent fonts, colors, and layout throughout every page.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-num">06</div>
+        <div class="feature-title">Migration & training included</div>
+        <div class="feature-desc">All existing content migrated to the new site. Staff training included so your team feels confident managing it independently going forward.</div>
+      </div>
+    </div>
+
+    <div class="cta-box fade-up">
+      <div class="cta-text">
+        <div class="cta-title">Ready to talk next steps?</div>
+        <div class="cta-sub">I'd love to walk you through a live demo or answer any questions about the process.</div>
+      </div>
+      <div class="cta-details">
+        <div class="cta-item">
+          <div class="cta-item-value">4–6</div>
+          <div class="cta-item-label">weeks delivery</div>
+        </div>
+        <div class="cta-item">
+          <div class="cta-item-value">100%</div>
+          <div class="cta-item-label">content migrated</div>
+        </div>
+        <div class="cta-item">
+          <div class="cta-item-value">∞</div>
+          <div class="cta-item-label">revisions welcome</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+const dots = document.querySelectorAll('.page-dot');
+const slides = ['slide1', 'slide2', 'slide3'];
+
+const slideObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = slides.indexOf(e.target.id);
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.5 });
+
+slides.forEach(id => slideObserver.observe(document.getElementById(id)));
+</script>
+</body>
+</html>
