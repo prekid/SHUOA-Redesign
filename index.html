@@ -459,6 +459,44 @@ a, button, [onclick] { cursor: pointer; }
 .fade-in { animation: fadeIn 0.5s ease both; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
+/* ── VIDEO SECTION ── */
+.video-section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+.video-section-grid .btn {
+  min-width: 160px;
+}
+.video-btns {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+@media (max-width: 768px) {
+  .video-btns { flex-direction: row; }
+  .video-btns .btn { flex: 1; justify-content: center; min-width: 0; font-size: 0.85rem; padding: 10px 8px; }
+}
+@media (max-width: 768px) {
+  .video-section-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .video-section-grid .hero-actions,
+  .video-section-grid > div:first-child > div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+  .video-section-grid .btn {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .hero-grid { grid-template-columns: 1fr; }
@@ -610,12 +648,12 @@ a, button, [onclick] { cursor: pointer; }
 
     <section class="section section-alt">
       <div class="container">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center;">
+        <div class="video-section-grid">
           <div>
             <p class="section-eyebrow">New residents</p>
             <h2 class="section-title">Moving into Skyline House?</h2>
             <p class="section-sub">Watch this short video to learn everything you need to know about moving in — building access, amenities, community rules, and how to get settled quickly.</p>
-            <div style="margin-top:1.5rem; display:flex; gap:10px; flex-wrap:wrap;">
+            <div class="video-btns">
               <button class="btn btn-gold" onclick="showPage('contact')">Contact Management</button>
               <button class="btn btn-navy" onclick="showPage('history')">Our History</button>
             </div>
