@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Skyline House — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy: #1c2b4a;
+  --navy-mid: #243560;
+  --navy-light: #2e4278;
+  --gold: #c9a96e;
+  --gold-light: #e8cc9a;
+  --gold-pale: #fdf6e8;
+  --cream: #f8f5ef;
+  --white: #ffffff;
+  --gray: #64748b;
+  --gray-light: #f1f5f9;
+  --border: rgba(0,0,0,0.08);
+  --text: #1e293b;
+}
+
+
+* { box-sizing: border-box; margin: 0; padding: 0; cursor: default; }
+a, button, [onclick], label { cursor: pointer !important; }
+input, textarea, select { cursor: text; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── PAGES ── */
+.page { display: none; min-height: 100vh; flex-direction: column; }
+.page.active { display: flex; }
+
+/* ── NAV ── */
+.navbar {
+  background: var(--navy);
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.navbar-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 2rem; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.navbar-logo {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+}
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 700; color: var(--navy);
+}
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; color: var(--white); line-height: 1.2;
+}
+.logo-text span { display: block; font-size: 0.65rem; color: rgba(255,255,255,0.45); font-family: 'Source Sans 3', sans-serif; font-weight: 400; letter-spacing: 0.05em; }
+
+.navbar-links { display: flex; align-items: center; gap: 0.25rem; }
+.nav-item { position: relative; }
+.nav-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.875rem; font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  padding: 6px 12px; border-radius: 6px;
+  transition: all .15s; display: flex; align-items: center; gap: 4px;
+}
+.nav-btn:hover { color: var(--white); background: rgba(255,255,255,0.08); }
+.nav-btn.active { color: var(--gold); }
+.nav-btn svg { width: 12px; height: 12px; opacity: 0.6; transition: transform .2s; pointer-events: none; }
+* { cursor: default; }
+a, button, [onclick] { cursor: pointer; }
+.nav-btn.open svg { transform: rotate(180deg); }
+
+.dropdown {
+  display: none; position: absolute; top: 100%; left: 0;
+  padding-top: 6px; min-width: 200px; z-index: 200;
+}
+.dropdown.open { display: block; }
+.dropdown-menu {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+.dropdown a {
+  display: block; padding: 10px 16px;
+  font-size: 0.875rem; color: var(--gray);
+  text-decoration: none; transition: all .15s;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:last-child { border-bottom: none; }
+.dropdown a:hover { background: var(--gold-pale); color: var(--navy); padding-left: 20px; }
+
+.nav-emergency {
+  background: #dc2626; color: var(--white) !important;
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 0.8rem; font-weight: 600;
+  text-decoration: none; margin-left: 0.5rem;
+  transition: background .15s;
+}
+.nav-emergency:hover { background: #b91c1c !important; }
+
+/* ── MAIN ── */
+.main { flex: 1; }
+
+/* ── HOME: HERO ── */
+.hero {
+  background: var(--navy);
+  position: relative; overflow: hidden;
+  padding: 5rem 0 4rem;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(46,66,120,0.8) 0%, transparent 50%);
+}
+.hero-grid {
+  max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+  display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: center;
+  position: relative;
+}
+.hero-eyebrow {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.25rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  color: var(--white); line-height: 1.18; margin-bottom: 1.25rem;
+}
+.hero-title em { color: var(--gold); font-style: normal; }
+.hero-body {
+  font-size: 1.05rem; color: rgba(255,255,255,0.6);
+  max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.75;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 22px; border-radius: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all .15s; border: none; text-decoration: none;
+}
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: var(--gold-light); }
+.btn-outline { background: rgba(255,255,255,0.08); color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
+.btn-outline:hover { background: rgba(255,255,255,0.14); }
+.btn-navy { background: var(--navy); color: var(--white); }
+.btn-navy:hover { background: var(--navy-mid); }
+
+.hero-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+.hero-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; color: var(--gold); margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.announce-list { display: flex; flex-direction: column; gap: 1rem; }
+.announce-item { display: flex; gap: 12px; align-items: flex-start; }
+.announce-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold); flex-shrink: 0; margin-top: 6px;
+}
+.announce-text { font-size: 0.875rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.announce-text strong { color: var(--white); display: block; margin-bottom: 2px; }
+.announce-date { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
+.hero-card-footer {
+  margin-top: 1.25rem; padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.8rem; color: rgba(255,255,255,0.35); text-align: center;
+}
+
+/* ── HOME: STATS ── */
+.stats-bar {
+  background: var(--navy-mid);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.stats-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.stat-item {
+  padding: 1.5rem 1rem; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem; color: var(--gold); display: block;
+}
+.stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+/* ── HOME: SECTIONS ── */
+.section { padding: 4rem 0; }
+.section-alt { background: var(--white); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+.section-eyebrow {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  color: var(--navy); margin-bottom: 0.75rem;
+}
+.section-sub {
+  font-size: 1rem; color: var(--gray); max-width: 520px;
+  font-weight: 300; line-height: 1.7;
+}
+
+.cards-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2.5rem;
+}
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem;
+  transition: transform .2s, box-shadow .2s;
+  cursor: pointer;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
+.section-alt .card { background: var(--cream); }
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--gold-pale); border: 1px solid rgba(201,169,110,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; margin-bottom: 1rem;
+}
+.card-title { font-size: 1rem; font-weight: 600; color: var(--navy); margin-bottom: 0.5rem; }
+.card-desc { font-size: 0.875rem; color: var(--gray); line-height: 1.6; }
+.card-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.8rem; font-weight: 600; color: var(--gold);
+  margin-top: 1rem; text-decoration: none;
+}
+
+/* ── HOME: EMERGENCY ── */
+.emergency-band {
+  background: #7f1d1d;
+  padding: 1rem 0;
+}
+.emergency-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.emergency-text { font-size: 0.9rem; color: rgba(255,255,255,0.9); }
+.emergency-text strong { color: var(--white); }
+.emergency-num { font-size: 1.1rem; font-weight: 700; color: var(--white); letter-spacing: 0.02em; }
+
+/* ── HISTORY PAGE ── */
+.page-hero {
+  background: var(--navy);
+  padding: 4rem 0 3rem;
+  position: relative; overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 90% 50%, rgba(201,169,110,0.1) 0%, transparent 60%);
+}
+.page-hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; }
+.breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; color: rgba(255,255,255,0.4);
+  margin-bottom: 1.25rem;
+}
+.breadcrumb a { color: rgba(255,255,255,0.4); text-decoration: none; cursor: pointer; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb-sep { opacity: 0.3; }
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  color: var(--white); margin-bottom: 0.75rem;
+}
+.page-sub { font-size: 1rem; color: rgba(255,255,255,0.5); font-weight: 300; }
+
+.history-body { padding: 3.5rem 0; }
+.history-intro {
+  max-width: 680px; margin: 0 auto 3.5rem;
+  text-align: center;
+}
+.history-intro p {
+  font-size: 1.05rem; color: var(--gray); line-height: 1.8; font-weight: 300;
+}
+
+.timeline { position: relative; max-width: 780px; margin: 0 auto; }
+.timeline::before {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 1px; background: var(--border); transform: translateX(-50%);
+}
+.timeline-item {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  margin-bottom: 3rem; position: relative;
+}
+.timeline-item:nth-child(odd) .timeline-content { grid-column: 1; text-align: right; }
+.timeline-item:nth-child(odd) .timeline-year { grid-column: 2; }
+.timeline-item:nth-child(even) .timeline-content { grid-column: 2; grid-row: 1; }
+.timeline-item:nth-child(even) .timeline-year { grid-column: 1; grid-row: 1; text-align: right; }
+
+.timeline-dot {
+  position: absolute; left: 50%; top: 8px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--gold); border: 2px solid var(--white);
+  box-shadow: 0 0 0 3px rgba(201,169,110,0.2);
+  transform: translateX(-50%);
+}
+.timeline-year {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; color: var(--gold); font-weight: 600;
+  padding-top: 0;
+}
+.timeline-content { }
+.timeline-title { font-size: 0.95rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
+.timeline-desc { font-size: 0.875rem; color: var(--gray); line-height: 1.65; }
+
+.history-quote {
+  background: var(--navy);
+  border-radius: 16px; padding: 3rem;
+  text-align: center; margin: 3rem 0;
+  position: relative; overflow: hidden;
+}
+.history-quote::before {
+  content: '"';
+  position: absolute; top: -20px; left: 2rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 10rem; color: rgba(201,169,110,0.08);
+  line-height: 1;
+}
+.history-quote p {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem; color: var(--white); line-height: 1.6;
+  max-width: 600px; margin: 0 auto 1rem; position: relative;
+}
+.history-quote cite { font-size: 0.85rem; color: var(--gold); font-style: normal; }
+
+/* ── CONTACT PAGE ── */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem;
+  padding: 3.5rem 0;
+}
+.contact-info { }
+.contact-info-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; color: var(--navy); margin-bottom: 0.5rem;
+}
+.contact-info-sub { font-size: 0.9rem; color: var(--gray); margin-bottom: 2rem; line-height: 1.6; }
+
+.contact-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 2rem; }
+.contact-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem 1.25rem;
+}
+.contact-card-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--gold-pale); border: 1px solid rgba(201,169,110,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.contact-card-label { font-size: 0.75rem; color: var(--gray); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+.contact-card-value { font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+.contact-card-sub { font-size: 0.8rem; color: var(--gray); }
+
+.emergency-card {
+  background: #fef2f2; border: 1px solid #fecaca;
+  border-radius: 12px; padding: 1.25rem;
+}
+.emergency-card-title { font-size: 0.85rem; font-weight: 700; color: #991b1b; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.emergency-card-num { font-size: 1.4rem; font-weight: 700; color: #dc2626; }
+.emergency-card-sub { font-size: 0.8rem; color: #991b1b; margin-top: 4px; }
+
+.contact-form-wrap {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 2rem;
+}
+.form-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--navy); margin-bottom: 0.25rem; }
+.form-sub { font-size: 0.875rem; color: var(--gray); margin-bottom: 1.75rem; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 1rem; }
+.form-label { font-size: 0.8rem; font-weight: 600; color: var(--navy); }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 9px 12px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.9rem; color: var(--text);
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: 8px; transition: border-color .15s; outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
+}
+.form-textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+.form-submit {
+  width: 100%; padding: 11px;
+  background: var(--navy); color: var(--white);
+  border: none; border-radius: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; transition: background .15s;
+  margin-top: 0.5rem;
+}
+.form-submit:hover { background: var(--navy-mid); }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--navy);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 3rem 0 1.5rem;
+}
+.footer-grid {
+  max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+  margin-bottom: 2.5rem;
+}
+.footer-brand-desc { font-size: 0.875rem; color: rgba(255,255,255,0.4); line-height: 1.7; margin-top: 0.75rem; }
+.footer-col-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.footer-links-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-links-list a { font-size: 0.875rem; color: rgba(255,255,255,0.5); text-decoration: none; cursor: pointer; transition: color .15s; }
+.footer-links-list a:hover { color: var(--gold); }
+.footer-bottom {
+  max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+.footer-address { font-size: 0.8rem; color: rgba(255,255,255,0.3); text-align: right; }
+
+/* ── DEMO BADGE ── */
+.demo-badge {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
+  background: var(--gold); color: var(--navy);
+  padding: 6px 14px; border-radius: 99px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ── ANIMATIONS ── */
+.fade-in { animation: fadeIn 0.5s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-card { display: none; }
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .cards-grid { grid-template-columns: 1fr; }
+  .timeline::before { left: 20px; }
+  .timeline-item { grid-template-columns: 1fr; padding-left: 48px; }
+  .timeline-item:nth-child(odd) .timeline-content,
+  .timeline-item:nth-child(even) .timeline-content { grid-column: 1; text-align: left; }
+  .timeline-item:nth-child(odd) .timeline-year,
+  .timeline-item:nth-child(even) .timeline-year { grid-column: 1; text-align: left; grid-row: auto; }
+  .timeline-dot { left: 20px; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .navbar-links .nav-item:not(:last-child) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="demo-badge">DEMO</div>
+
+<!-- ═══════════════════════════════════
+     PAGE: HOME
+     ═══════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="navbar-logo" onclick="showPage('home')">
+        <div class="logo-mark">S</div>
+        <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
+      </div>
+      <div class="navbar-links">
+        <div class="nav-item">
+          <button class="nav-btn active">Home
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a onclick="showPage('home')">Welcome</a>
+            <a onclick="showPage('history')">The History of Skyline House</a>
+            <a onclick="showPage('contact')">Contact Information</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Condo Facilities
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Facilities</a>
+            <a href="#">Floor Plans</a>
+            <a href="#">Party Room</a>
+            <a href="#">Condo Library</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Governance
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Board of Directors</a>
+            <a href="#">Committees</a>
+            <a href="#">Rules & Regulations</a>
+            <a href="#">Condo Fees</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Downloads
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Newsletter</a>
+            <a href="#">Calendar of Events</a>
+            <a href="#">Forms</a>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">Falls Church, Virginia</div>
+          <h1 class="hero-title">Welcome to<br><em>Skyline House</em></h1>
+          <p class="hero-body">Your home in Northern Virginia — minutes from Washington D.C., the Pentagon, and Reagan National Airport. Everything your community needs, right here.</p>
+          <div class="hero-actions">
+            <button class="btn btn-gold" onclick="showPage('history')">Our History</button>
+            <button class="btn btn-outline" onclick="showPage('contact')">Contact Us</button>
+          </div>
+        </div>
+        <div class="hero-card fade-in">
+          <div class="hero-card-title">Latest Announcements</div>
+          <div class="announce-list">
+            <div class="announce-item">
+              <div class="announce-dot"></div>
+              <div class="announce-text">
+                <strong>New Library & Billiard Room Hours</strong>
+                Updated hours now in effect for all residents.
+                <div class="announce-date">April 18, 2026</div>
+              </div>
+            </div>
+            <div class="announce-item">
+              <div class="announce-dot"></div>
+              <div class="announce-text">
+                <strong>TGIF — West Party Room</strong>
+                Friday, May 2 at 7:00pm. Bring food to share!
+                <div class="announce-date">April 15, 2026</div>
+              </div>
+            </div>
+            <div class="announce-item">
+              <div class="announce-dot"></div>
+              <div class="announce-text">
+                <strong>Balcony Maintenance Guide</strong>
+                New guide published — download your copy today.
+                <div class="announce-date">April 10, 2026</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-card-footer">View all announcements →</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-bar">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <span class="stat-num">272</span>
+          <span class="stat-label">Residential units</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">18</span>
+          <span class="stat-label">Floors</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">1973</span>
+          <span class="stat-label">Year built</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">5 min</span>
+          <span class="stat-label">To D.C. beltway</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center;">
+          <div>
+            <p class="section-eyebrow">New residents</p>
+            <h2 class="section-title">Moving into Skyline House?</h2>
+            <p class="section-sub">Watch this short video to learn everything you need to know about moving in — building access, amenities, community rules, and how to get settled quickly.</p>
+            <div style="margin-top:1.5rem; display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-gold" onclick="showPage('contact')">Contact Management</button>
+              <button class="btn btn-navy" onclick="showPage('history')">Our History</button>
+            </div>
+          </div>
+          <div style="position:relative; padding-bottom:56.25%; height:0; border-radius:14px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.12);">
+            <iframe
+              src="https://www.youtube.com/embed/pCo8DW4_6GI"
+              title="Welcome to Skyline House"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="section-eyebrow">For residents</p>
+        <h2 class="section-title">Everything you need, in one place.</h2>
+        <p class="section-sub">Quick access to the most important resources for Skyline House residents and owners.</p>
+        <div class="cards-grid">
+          <div class="card" onclick="showPage('contact')">
+            <div class="card-icon">📋</div>
+            <div class="card-title">Forms & Documents</div>
+            <div class="card-desc">Move-in/out requests, maintenance forms, parking permits, and all resident documents in one place.</div>
+            <span class="card-link">Browse forms →</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">📅</div>
+            <div class="card-title">Events & Calendar</div>
+            <div class="card-desc">Stay up to date with community events, board meetings, and committee agendas.</div>
+            <span class="card-link">View calendar →</span>
+          </div>
+          <div class="card" onclick="showPage('history')">
+            <div class="card-icon">🏛️</div>
+            <div class="card-title">History of Skyline House</div>
+            <div class="card-desc">Learn about the rich history of our community and the Bailey's Crossroads neighborhood.</div>
+            <span class="card-link">Read more →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <p class="section-eyebrow">Governance</p>
+        <h2 class="section-title">Your community is well managed.</h2>
+        <p class="section-sub">A dedicated Board of Directors and six active committees keep Skyline House running smoothly for all residents.</p>
+        <div class="cards-grid">
+          <div class="card">
+            <div class="card-icon">👥</div>
+            <div class="card-title">Board of Directors</div>
+            <div class="card-desc">Elected representatives managing the overall operations and strategic direction of Skyline House.</div>
+            <span class="card-link">Meet the board →</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">📜</div>
+            <div class="card-title">Rules & Regulations</div>
+            <div class="card-desc">Current rules and regulations updated February 2022. Essential reading for all residents and owners.</div>
+            <span class="card-link">Read rules →</span>
+          </div>
+          <div class="card" onclick="showPage('contact')">
+            <div class="card-icon">💬</div>
+            <div class="card-title">Get in Touch</div>
+            <div class="card-desc">Questions about your unit, fees, or community services? Our management office is here to help.</div>
+            <span class="card-link">Contact us →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="emergency-band">
+      <div class="emergency-inner">
+        <div class="emergency-text"><strong>Non-emergency crime reporting:</strong> Use the Fairfax County Citizens Reporting System for non-urgent incidents.</div>
+        <div class="emergency-num">For emergencies: 911</div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="navbar-logo">
+          <div class="logo-mark">S</div>
+          <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
+        </div>
+        <p class="footer-brand-desc">A premier highrise condominium community in Falls Church, Virginia — convenient to Washington D.C., the Pentagon, and Reagan National Airport.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigate</div>
+        <ul class="footer-links-list">
+          <li><a onclick="showPage('home')">Home</a></li>
+          <li><a onclick="showPage('history')">Our History</a></li>
+          <li><a onclick="showPage('contact')">Contact</a></li>
+          <li><a href="#">Condo Facilities</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Governance</div>
+        <ul class="footer-links-list">
+          <li><a href="#">Board of Directors</a></li>
+          <li><a href="#">Committees</a></li>
+          <li><a href="#">Rules & Regulations</a></li>
+          <li><a href="#">Condo Fees</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Downloads</div>
+        <ul class="footer-links-list">
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="#">Calendar</a></li>
+          <li><a href="#">Forms</a></li>
+          <li><a href="#">Emergency Guide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Skyline House Unit Owners Association</div>
+      <div class="footer-address">3711 S. George Mason Dr., Falls Church, VA 22041 · (703) 578-4855</div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═══════════════════════════════════
+     PAGE: HISTORY
+     ═══════════════════════════════════ -->
+<div class="page" id="page-history">
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="navbar-logo" onclick="showPage('home')">
+        <div class="logo-mark">S</div>
+        <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
+      </div>
+      <div class="navbar-links">
+        <div class="nav-item">
+          <button class="nav-btn active">Home
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a onclick="showPage('home')">Welcome</a>
+            <a onclick="showPage('history')">The History of Skyline House</a>
+            <a onclick="showPage('contact')">Contact Information</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Condo Facilities
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Facilities</a>
+            <a href="#">Floor Plans</a>
+            <a href="#">Party Room</a>
+            <a href="#">Condo Library</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Governance
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Board of Directors</a>
+            <a href="#">Committees</a>
+            <a href="#">Rules & Regulations</a>
+            <a href="#">Condo Fees</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Downloads
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Newsletter</a>
+            <a href="#">Calendar of Events</a>
+            <a href="#">Forms</a>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="breadcrumb">
+          <a onclick="showPage('home')">Home</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>The History of Skyline House</span>
+        </div>
+        <h1 class="page-title">The History of Skyline House</h1>
+        <p class="page-sub">From construction to community — over 50 years of highrise living in Northern Virginia.</p>
+      </div>
+    </div>
+
+    <div class="history-body">
+      <div class="container">
+        <div class="history-intro">
+          <p>Skyline House has been a landmark of the Bailey's Crossroads community since the early 1970s. What began as a modern vision for urban highrise living has grown into a vibrant, close-knit community of owners and residents who take pride in their home.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1971</div>
+            <div class="timeline-content">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">Construction begins</div>
+              <div class="timeline-desc">Ground is broken on the 18-story residential tower at 3711 S. George Mason Drive in Falls Church, Virginia, designed to bring modern highrise living to the Northern Virginia suburbs.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1973</div>
+            <div class="timeline-content">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">Doors open</div>
+              <div class="timeline-desc">Skyline House welcomes its first residents. The 272-unit building offers stunning views of the Washington D.C. skyline and convenient access to the capital region.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1980s</div>
+            <div class="timeline-content">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">Conversion to condominiums</div>
+              <div class="timeline-desc">Skyline House transitions from rental to condominium ownership, forming the Skyline House Unit Owners Association (SHUOA) to govern the community.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1990s</div>
+            <div class="timeline-content">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">Community programs established</div>
+              <div class="timeline-desc">The Activities Committee, Good Neighbors program, and Welcome Wagon are established, creating the community spirit that Skyline House is known for today.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2000s</div>
+            <div class="timeline-content">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">Major renovations</div>
+              <div class="timeline-desc">Significant upgrades to common areas, mechanical systems, and building infrastructure ensure Skyline House remains a premier address in Northern Virginia.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Today</div>
+            <div class="timeline-content">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">A thriving community</div>
+              <div class="timeline-desc">Skyline House continues to be one of the most sought-after addresses in Fairfax County, with an active community, well-maintained facilities, and residents proud to call it home.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="history-quote">
+          <p>"Skyline House has always been more than just a building — it's a community where neighbors become friends and residents take pride in their shared home."</p>
+          <cite>— Skyline House Unit Owners Association</cite>
+        </div>
+
+        <div style="text-align:center; margin-top: 2rem;">
+          <button class="btn btn-gold" onclick="showPage('contact')" style="margin-right:12px">Get in Touch</button>
+          <button class="btn btn-navy" onclick="showPage('home')">← Back to Home</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <div class="footer-copy">© 2026 Skyline House Unit Owners Association</div>
+      <div class="footer-address">3711 S. George Mason Dr., Falls Church, VA 22041 · (703) 578-4855</div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═══════════════════════════════════
+     PAGE: CONTACT
+     ═══════════════════════════════════ -->
+<div class="page" id="page-contact">
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="navbar-logo" onclick="showPage('home')">
+        <div class="logo-mark">S</div>
+        <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
+      </div>
+      <div class="navbar-links">
+        <div class="nav-item">
+          <button class="nav-btn active">Home
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a onclick="showPage('home')">Welcome</a>
+            <a onclick="showPage('history')">The History of Skyline House</a>
+            <a onclick="showPage('contact')">Contact Information</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Condo Facilities
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Facilities</a>
+            <a href="#">Floor Plans</a>
+            <a href="#">Party Room</a>
+            <a href="#">Condo Library</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Governance
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Board of Directors</a>
+            <a href="#">Committees</a>
+            <a href="#">Rules & Regulations</a>
+            <a href="#">Condo Fees</a>
+          </div></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-btn">Downloads
+            <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="dropdown"><div class="dropdown-menu">
+            <a href="#">Newsletter</a>
+            <a href="#">Calendar of Events</a>
+            <a href="#">Forms</a>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="breadcrumb">
+          <a onclick="showPage('home')">Home</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Contact Information</span>
+        </div>
+        <h1 class="page-title">Contact Information</h1>
+        <p class="page-sub">Get in touch with the Skyline House management office or send us a message directly.</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2 class="contact-info-title">We're here to help.</h2>
+          <p class="contact-info-sub">Whether you have a question about your unit, need a form, or want to report a maintenance issue — reach out and we'll get back to you promptly.</p>
+
+          <div class="contact-cards">
+            <div class="contact-card">
+              <div class="contact-card-icon">📍</div>
+              <div>
+                <div class="contact-card-label">Address</div>
+                <div class="contact-card-value">3711 S. George Mason Drive</div>
+                <div class="contact-card-sub">Falls Church, VA 22041</div>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-icon">📞</div>
+              <div>
+                <div class="contact-card-label">Phone</div>
+                <div class="contact-card-value">(703) 578-4855</div>
+                <div class="contact-card-sub">Monday – Friday, 9am – 5pm</div>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-icon">✉️</div>
+              <div>
+                <div class="contact-card-label">Email</div>
+                <div class="contact-card-value">management@shuoa.org</div>
+                <div class="contact-card-sub">We respond within 1–2 business days</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="emergency-card">
+            <div class="emergency-card-title">⚡ Emergency</div>
+            <div class="emergency-card-num">911</div>
+            <div class="emergency-card-sub">For all life-threatening emergencies. For non-emergency crime reporting, use the Fairfax County Citizens Reporting System.</div>
+          </div>
+        </div>
+
+        <div class="contact-form-wrap">
+          <div class="form-title">Send us a message</div>
+          <div class="form-sub">Fill out the form and a member of our team will be in touch.</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First name</label>
+              <input type="text" class="form-input" placeholder="John"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last name</label>
+              <input type="text" class="form-input" placeholder="Smith"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <input type="email" class="form-input" placeholder="john.smith@email.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit number <span style="color:var(--gray);font-weight:400">(optional)</span></label>
+            <input type="text" class="form-input" placeholder="e.g. 812"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <select class="form-select">
+              <option>General inquiry</option>
+              <option>Maintenance request</option>
+              <option>Board / Governance</option>
+              <option>Move-in / Move-out</option>
+              <option>Noise complaint</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-textarea" placeholder="How can we help you?"></textarea>
+          </div>
+          <button class="form-submit">Send Message</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <div class="footer-copy">© 2026 Skyline House Unit Owners Association</div>
+      <div class="footer-address">3711 S. George Mason Dr., Falls Church, VA 22041 · (703) 578-4855</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  closeAllDropdowns();
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('open'));
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    const item = this.closest('.nav-item');
+    const dropdown = item ? item.querySelector('.dropdown') : null;
+    if (!dropdown) return;
+    const isOpen = dropdown.classList.contains('open');
+    closeAllDropdowns();
+    if (!isOpen) {
+      dropdown.classList.add('open');
+      this.classList.add('open');
+    }
+    e.stopPropagation();
+  });
+});
+
+document.addEventListener('click', closeAllDropdowns);
+</script>
+</body>
+</html>
