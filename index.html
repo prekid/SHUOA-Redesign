@@ -24,6 +24,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; cursor: default; }
 a, button, [onclick], label { cursor: pointer !important; }
+[onclick] * { cursor: pointer !important; }
 input, textarea, select { cursor: text; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -51,7 +52,7 @@ body {
   display: flex; align-items: center; justify-content: space-between;
 }
 .navbar-logo {
-  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  display: flex; align-items: center; gap: 10px; cursor: pointer !important;
 }
 .logo-mark {
   width: 34px; height: 34px; border-radius: 8px;
@@ -701,7 +702,7 @@ a, button, [onclick] { cursor: pointer; }
   <footer class="footer">
     <div class="footer-grid">
       <div>
-        <div class="navbar-logo">
+        <div class="navbar-logo" onclick="showPage('home')">
           <div class="logo-mark">S</div>
           <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
         </div>
