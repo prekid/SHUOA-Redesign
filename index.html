@@ -455,6 +455,79 @@ a, button, [onclick] { cursor: pointer; }
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+
+/* ── HAMBURGER ── */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer !important;
+  z-index: 110;
+}
+.hamburger-btn span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 2px;
+  transition: all .25s;
+}
+.hamburger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger-btn.open span:nth-child(2) { opacity: 0; }
+.hamburger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 768px) {
+  .hamburger-btn { display: flex; }
+
+  .navbar-links {
+    display: none;
+    position: absolute;
+    top: 60px; left: 0; right: 0;
+    background: var(--navy);
+    flex-direction: column;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    z-index: 100;
+  }
+  .navbar-links.open { display: flex; }
+
+  .nav-item { width: 100%; }
+  .nav-btn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 12px 1.5rem;
+    border-radius: 0;
+    font-size: 1rem;
+  }
+  .nav-emergency {
+    margin: 0.5rem 1.5rem 0;
+    text-align: center;
+    border-radius: 6px;
+  }
+  .dropdown {
+    position: static;
+    padding-top: 0;
+  }
+  .dropdown.open { display: block; }
+  .dropdown-menu {
+    border-radius: 0;
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    box-shadow: none;
+    background: var(--navy-mid);
+  }
+  .dropdown a {
+    color: rgba(255,255,255,0.7);
+    padding: 10px 2.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .dropdown a:hover { background: rgba(255,255,255,0.06); color: var(--white); padding-left: 2.5rem; }
+}
+
 /* ── ANIMATIONS ── */
 .fade-in { animation: fadeIn 0.5s ease both; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
@@ -513,7 +586,7 @@ a, button, [onclick] { cursor: pointer; }
   .contact-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .navbar-links .nav-item:not(:last-child) { display: none; }
+
 }
 </style>
 </head>
@@ -532,6 +605,9 @@ a, button, [onclick] { cursor: pointer; }
         <div class="logo-mark">S</div>
         <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
       </div>
+      <button class="hamburger-btn" onclick="toggleMenu(this)" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
       <div class="navbar-links">
         <div class="nav-item">
           <button class="nav-btn active">Home
@@ -793,6 +869,9 @@ a, button, [onclick] { cursor: pointer; }
         <div class="logo-mark">S</div>
         <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
       </div>
+      <button class="hamburger-btn" onclick="toggleMenu(this)" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
       <div class="navbar-links">
         <div class="nav-item">
           <button class="nav-btn active">Home
@@ -943,6 +1022,9 @@ a, button, [onclick] { cursor: pointer; }
         <div class="logo-mark">S</div>
         <div class="logo-text">Skyline House <span>Unit Owners Association</span></div>
       </div>
+      <button class="hamburger-btn" onclick="toggleMenu(this)" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
       <div class="navbar-links">
         <div class="nav-item">
           <button class="nav-btn active">Home
@@ -1096,34 +1178,61 @@ a, button, [onclick] { cursor: pointer; }
 </div>
 
 <script>
+// ── Single source of truth for nav state ──
+// hamburger: .hamburger-btn.open  → X icon, menu open
+// dropdown:  .dropdown.open       → dropdown visible
+//            .nav-btn arrow rotates via CSS [.nav-btn.open svg]
+
 function showPage(name) {
+  resetNav();
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  closeAllDropdowns();
 }
 
-function closeAllDropdowns() {
+function resetNav() {
+  document.querySelectorAll('.hamburger-btn').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.navbar-links').forEach(l => l.classList.remove('open'));
   document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('open'));
 }
 
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    const item = this.closest('.nav-item');
-    const dropdown = item ? item.querySelector('.dropdown') : null;
-    if (!dropdown) return;
-    const isOpen = dropdown.classList.contains('open');
-    closeAllDropdowns();
-    if (!isOpen) {
-      dropdown.classList.add('open');
-      this.classList.add('open');
+function toggleMenu(btn) {
+  const isOpen = btn.classList.contains('open');
+  resetNav();
+  if (!isOpen) {
+    btn.classList.add('open');
+    btn.closest('nav').querySelector('.navbar-links').classList.add('open');
+  }
+}
+
+// Dropdown toggle — only touches dropdown + its nav-btn arrow, never hamburger
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.nav-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const dropdown = this.closest('.nav-item').querySelector('.dropdown');
+      if (!dropdown) return;
+      const isOpen = dropdown.classList.contains('open');
+      // Close all dropdowns first
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('open'));
+      // Reopen if it was closed
+      if (!isOpen) {
+        dropdown.classList.add('open');
+        this.classList.add('open');
+      }
+    });
+  });
+
+  // Click outside closes dropdowns only, never touches hamburger
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('open'));
     }
-    e.stopPropagation();
   });
 });
-
-document.addEventListener('click', closeAllDropdowns);
 </script>
 </body>
 </html>
